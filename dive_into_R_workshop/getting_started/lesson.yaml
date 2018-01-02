@@ -1,0 +1,177 @@
+- Class: meta
+  Course: dive_into_R_workshop
+  Lesson: getting_started
+  Author:  Sigrid Keydana
+  Type: Standard
+  Organization: Trivadis
+  Version: 2.4.3
+
+  #1
+- Class: text
+  Output: Hi and welcome to the "Dive into R" workshop! I'm looking forward to showing you how to do stuff with R.
+    When scrolling through text, just type "enter" to continue...
+  
+  #2  
+- Class: text
+  Output: 
+    ... exactly.
+  
+  #3  
+- Class: text
+  Output: This will be an interactive course. 
+    If at any time you want to play around - try out similar things, for example - instead of working on the next question ...
+  
+  #4  
+- Class: text
+  Output: ... just type play(). To go back to the main lesson, type nxt().
+  
+  #5
+- Class: text
+  Output: To get a list of all available commands, just type info().
+  
+  #6
+- Class: text
+  Output: That said, we're going to start now!
+  
+  #7  
+- Class: cmd_question
+  Output: Now just type 2 into the console to see how R evaluates the input and outputs the result.
+  CorrectAnswer: 2 
+  AnswerTests: omnitest(correctExpr='2')
+  Hint: Just type 2.
+
+  #9
+- Class: text
+  Output: Numbers in R are double precision by default, so there is no difference between say 2.0 and 2.
+    If you explicitly need an integer, you have to write 2L.
+    
+  #10        
+- Class: cmd_question
+  Output: Strings (or characters) in R may be enclosed by either single or double quotes.
+    Try outputting the string "R you ready?" now.
+  AnswerTests: any_of_exprs('"R you ready?"', '\'R you ready?\'')
+  Hint: Just type one of "R you ready?" or 'R you ready?'.
+  
+  #11  
+- Class: cmd_question
+  Output: Now output the same string again, but if you used double quotes before, use single quotes now, and vice versa.
+    You'll notice that in both cases, R prints the string using double quotes. This is because the quotes are not part
+    of the internal representation. How R prints an object on the console is determined by the object itself - - it may,
+    for example, include pretty-printing.
+  AnswerTests: any_of_exprs('"R you ready?"', '\'R you ready?\'')
+  Hint: Just type one of "R you ready?" or 'R you ready?'.   
+  
+  #12
+- Class: cmd_question
+  Output: Besides strings and numbers, another indispensable object type is "logical" - TRUE or FALSE.
+    On the console, test if TRUE equals FALSE, using double equality signs for the test.
+  AnswerTests: any_of_exprs('TRUE == FALSE', 'FALSE == TRUE')
+  Hint: Just type one of 'TRUE == FALSE' or 'FALSE == TRUE'.
+  
+  #13
+- Class: cmd_question
+  Output: Languages differ in if and how they coerce non-boolean object types to booleans. Use isTRUE to check
+   whether in R, the number 1 is TRUE.
+  AnswerTests: omnitest('isTRUE(1)')
+  Hint: Just type isTRUE(1).   
+    
+  #14  
+- Class: cmd_question
+  Output: So 1 is not TRUE because it is not a logical. However, when used at a place where a logical is expected, it will get coerced to a logical.
+    You can see this when you use a number in an if expression. Type if(1) 1 else 2 to see that.
+  AnswerTests: omnitest('if(1) 1 else 2')
+  Hint: Just type if(1) 1 else 2.       
+
+  #15
+- Class: cmd_question
+  Output: Now that we've seen the most important basic object types, let's talk about assignment.
+    Assignment in R is done using the <- operator or alternatively, the equality sign.
+    To try this, assign y the value 299.
+  AnswerTests: any_of_exprs('y <- 299', 'y = 299')
+  Hint: Just type y <- 299.
+  
+  #16
+- Class: cmd_question
+  Output: Now test if y equals -10.
+  AnswerTests: omnitest('y == -10')
+  Hint: Just type y == -10.  
+  
+  #17
+- Class: text
+  Output: Now that we've seen the basic R object types, let's look at some special features.
+    One is that every object can have attributes - metadata, so to say.
+    This will be most useful with the data structures we'll see in the next lesson (e.g., lists or data frames),
+    but even objects like numbers can have attributes!
+    
+  #18  
+- Class: cmd_question
+  Output: To check if an object has attributes, you use the attributes() function.
+    To try this out, first create a variable called named_int and assign it the value 25.
+  AnswerTests: any_of_exprs('named_int <- 25', 'named_int = 25')
+  Hint: Just type named_int <- 25. 
+  
+  #19
+- Class: cmd_question
+  Output: Now, check whether named_int has any attributes.
+  AnswerTests: omnitest('attributes(named_int)')
+  Hint: Just type attributes(named_int).   
+    
+  #20  
+- Class: cmd_question
+  Output: Now use the function attr() to set named_int's my_name attribute to Rose. 
+    The syntax is attr(<var>, <name>) <- <value>.
+  AnswerTests: omnitest("attr(named_int, 'my_name') <-'Rose'")
+  Hint: Just type attr(named_int, 'my_name') <-'Rose'.   
+  
+  #21
+- Class: cmd_question
+  Output: And now, check again if named_int has attributes.
+  AnswerTests: omnitest("attributes(named_int)")
+  Hint: Just type attributes(named_int).  
+  
+  #22
+- Class: text
+  Output: Another thing that is special in R is factors.
+    Factors are used for categorical data.Imagine you have data where the numbers 1,2,3,4 are used to describe four different treatments,
+    for example, four different sleeping pills. If you don't do anything, R will treat these numbers as ordered and metric,
+    meaning that 4 is bigger than - and even twice as big as - 2. This leads to wrong results in many statistical methods.
+    
+  #23  
+- Class: cmd_question
+  Output: Therefore, what you do is convert the variable to a factor. We haven't seen vectors yet (this is the topic of the next lesson) but a vector is just a concatenation of elements of a common type.
+    Vectors are created using the c() function. So, please create a variable a that will hold our sleeping pills.
+    Type a <- c(2,4,3,3,1,1,1,1,4) to create the vector.
+  AnswerTests: omnitest("a <- c(2,4,3,3,1,1,1,1,4)")
+  Hint: Just type a <- c(2,4,3,3,1,1,1,1,4).     
+    
+  #24  
+- Class: cmd_question
+  Output: Now, display the contents of a.
+  AnswerTests: omnitest("a")
+  Hint: Just type a.  
+  
+  #25
+- Class: cmd_question
+  Output: Converting a variable to a factor is done using factor(). Now, create a factor a_f from a.
+  AnswerTests: omnitest("a_f <- factor(a)")
+  Hint: Just type a_f <- factor(a).  
+  
+  #26
+- Class: cmd_question
+  Output: Now, display a_f and look at the output.
+  AnswerTests: omnitest("a_f")
+  Hint: Just type a_f.  
+  
+  #27
+- Class: cmd_question
+  Output: Levels are realized as attributes.To wrap up this lesson, inspect the attributes of the newly created a_f variable.
+  AnswerTests: omnitest("attributes(a_f)")
+  Hint: Just type attributes(a_f).  
+  
+  #28
+- Class: text
+  Output: Congratulations! You've reached the end of the first lesson.
+    Next, we'll dig deeper into things like vectors, lists, matrices and data frames.
+  
+  
+  

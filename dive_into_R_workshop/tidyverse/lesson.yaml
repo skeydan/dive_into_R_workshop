@@ -1,0 +1,268 @@
+- Class: meta
+  Course: dive_into_R_workshop
+  Lesson: tidyverse
+  Author: Sigrid
+  Type: Standard
+  Organization: Trivadis
+  Version: 2.4.3
+
+#1
+- Class: text
+  Output: Now that we know the basics of R, let's jump right into the tidyverse - Hadley Wickham's famous collection of packages that allow for intuitive, uniform and elegant data handling in R.
+  
+#2
+- Class: cmd_question
+  Output: For SQL-like data manipulation, it is the dplyr library we need.
+    Go ahead and load dplyr now.
+  AnswerTests: omnitest('library(dplyr)')
+  Hint: Just type library(dplyr).
+  
+#3
+- Class: text
+  Output: With dplyr, you can filter, select and order data with an elegant, SQL-like syntax.
+    We'll start with filtering. 
+    
+#4
+- Class: text
+  Output: We'll use the longley macroeconomic dataset.
+  AnswerTests: omnitest('data("longley")')
+  Hint: Just type data("longley")
+
+#5
+- Class: cmd_question
+  Output: Look at the first rows to see what's contained in the dataset.
+  AnswerTests: omnitest('head(longley)')
+  Hint: Just type head(longley).
+  
+#6
+- Class: cmd_question
+  Output: How many rows does the dataset contain?
+  AnswerTests: omnitest('nrow(longley)')
+  Hint: Just type nrow(longley).
+  
+#7
+- Class: text
+  Output:  To filter the rows, you use the filter() function.
+    filter() gets passed a dataset and a predicate.
+    For example, this is how you'd filter the dataset so it contains just rows where Year > 1959
+    
+#8
+- Class: text
+  Output:  filter(longley, Year > 1959)
+    
+#9
+- Class: cmd_question
+  Output: Filters can be ANDed using & and ORed using |.
+    Now filter the dataset, keeping just rows where Year > 1959 or GNP > 460.
+  AnswerTests: omnitest('filter(longley, Year > 1959 | GNP > 460)')
+  Hint: Just type filter(longley, Year > 1959 | GNP > 460).
+  
+#10
+- Class: text
+  Output:  With filtering, there is a nice SQL-like syntax that lets you test whether a value is one of several "admitted" values.
+    For example, to check for rows where Year is one of 1951, 1954, or 1959, you write
+
+#11
+- Class: text
+  Output:  filter(longley, Year %in% c(1951,1954,1959))
+  
+  
+#12
+- Class: cmd_question
+  Output: So please now filter the dataset again, this time keeping just rows where the rounded value of Population is between 120 and 123.
+  AnswerTests: any_of_exprs('filter(longley, round(Population) %in% c(120,121,122,123))', 'filter(longley, round(Population) %in% 120:123)')
+  Hint: Just type filter(longley, round(Population) %in% 120:123)
+  
+#13
+- Class: cmd_question
+  Output: Did you think that if there's a SQL-like %in%, probably there's a between too?
+    Indeed there is. The syntax is between(<value>,<lower>,<upper>).
+    Use between now to get the same result as above.
+  AnswerTests: omnitest('filter(longley, between(round(Population), 120,123))')
+  Hint: Just type filter(longley, between(round(Population), 120,123)) 
+
+#17
+- Class: text
+  Output: Now that we know how to filter rows, we probably also want to sort them.
+  
+#18
+- Class: cmd_question
+  Output: Sorting is done using arrange(<dataset>,<sort_column>).
+    Go ahead and sort the dataset by the value of Unemployed now.
+  AnswerTests: omnitest('arrange(longley,Unemployed)')
+  Hint: Just type arrange(longley,Unemployed)
+
+#19
+- Class: text
+  Output: As you see, by default arrange() does an ascending sort.
+    You can do a descending sort instead using arrange(<dataset>, desc(<sort_column>)).
+  
+#20
+- Class: cmd_question
+  Output: Now please do a descending sort by GNP of the filtered dataset, keeping just the rows where Year < 1958.
+    (Do the filter step first.)
+  AnswerTests: omnitest('arrange(filter(longley, Year < 1958), desc(GNP))')
+  Hint: Just type arrange(filter(longley, Year < 1958), desc(GNP))
+  
+#21
+- Class: text
+  Output: Until now, we've always kept all the variables in the dataframe.
+    What if we only want Year, Employed and GNP?
+    We can use select() to just select certain columns, like this
+
+#22
+- Class: text
+  Output: select(longley, Year, Employed, GNP)
+  
+#23
+- Class: cmd_question
+  Output: OK! Now combine select, filter and arrange to display the Year and GNP of all rows where Year > 1960, ordering the data by GNP.
+    (Please use arrange, filter and select in this order in your expression.)
+  AnswerTests: omnitest('arrange(filter(select(longley, Year, GNP), Year > 1960), GNP)')
+  Hint: Just type arrange(filter(select(longley, Year, GNP), Year > 1960), GNP)
+  
+#24
+- Class: text
+  Output: Did you think this was a lot of parentheses to write?
+    Luckily, dplyr offers a different way to chain commands - the pipe.
+    
+#25
+- Class: text
+  Output: Like the unix pipe, dplyr's pipe allows you to write code in a fluent API style, writing "as you think".
+
+#26
+- Class: text
+  Output: The pipe operator, written %>%, pipes the output of every command in a chain as input to the next.
+    With the pipe, you can rewrite the above query like this
+
+#27    
+- Class: text
+  Output: longley %>% select(GNP) %>% filter(Year > 1960)  %>% arrange(GNP)
+  
+#28  
+- Class: text
+  Output: Remember how, for example, filter takes two or more arguments, the dataset and one or more predicates?
+  
+#29    
+- Class: text
+  Output: Now with the %>% syntax, we just pass in the predicate(s) because the dataset is automatically passed to filter by the %>%.
+  
+#30  
+- Class: text
+  Output: Now it's your turn to get used to the %>%! Let's switch to another dataset though, for variety's sake. It's called "InsectSprays."
+    
+#32
+- Class: cmd_question
+  Output: Have a look at how InsectSprays is structured. (Use the str() function so you get additional information about what values exist.)
+  AnswerTests: omnitest('str(InsectSprays)')
+  Hint: Just type str(InsectSprays).
+  
+#33
+- Class: cmd_question
+  Output: Now, using the %>%, filter InsectSprays, just keeping rows for spray B.
+  AnswerTests: omnitest("InsectSprays %>% filter(spray == 'B')")
+  Hint: Just type  InsectSprays %>% filter(spray == 'B').
+  
+#34
+- Class: cmd_question
+  Output: Great! Now, building on the above query, order the remaining rows by count.
+  AnswerTests: omnitest("InsectSprays %>% filter(spray == 'B') %>% arrange(count)")
+  Hint: Just type InsectSprays %>% filter(spray == 'B') %>% arrange(count).  
+  
+#35
+- Class: cmd_question
+  Output: Finally, again building on what you did before, just keep the count column.
+  AnswerTests: omnitest("InsectSprays %>% filter(spray == 'B') %>% arrange(count) %>% select(count)")
+  Hint: Just type InsectSprays %>% filter(spray == 'B') %>% arrange(count) %>% select(count) .   
+
+#36  
+- Class: text
+  Output: How about adding new variables to a dataset? 
+    You use mutate(<dataset>, <newvar> = expression) for that.
+
+#37
+- Class: text
+  Output: Try this out now. Add a new variable, logcount, to InsectSprays.
+    It's supposed to be the (natural) log of count.
+  
+#38
+- Class: text
+  Output: There's one thing to pay attention to, though.
+    In spite of its name, mutate() doesn't mutate the original dataset, but returns a new one.
+    So you have to either assign the result to the variable holding the original dataset, or to a different variable.
+  
+  
+#39
+- Class: cmd_question
+  Output: Just assign the result to the variable newSprays now.
+  AnswerTests: any_of_exprs('newSprays <- InsectSprays %>% mutate(logcount = log(count))','newSprays <- mutate(InsectSprays, logcount = log(count))')
+  Hint: Just type newSprays <- InsectSprays %>% mutate(logcount = log(count)).
+  
+#40
+- Class: text
+  Output: OK! That's all very nice but ...if you're used to working with SQL, there must be something you're missing - group by!
+  
+#41
+- Class: text
+  Output: Sure, there'a group by in dplyr.
+    It's called group_by, and it's called with the dataset and the column(s) you want to group by.
+    If you use the %>%, it could look like this (remember, no need to pass the dataset)
+   
+#42    
+- Class: text
+  Output:  InsectSprays %>% group_by(spray)
+
+#43    
+- Class: text
+  Output: However, there's no use to grouping data if you don't calculate aggregate values (sums, averages, counts...) for the groups!
+    With dplyr, you do this using summarise(), passing in the dataset (only if you don't use the %>%!) and the aggregation function(s).
+    Like this, for example
+    
+#44    
+- Class: text
+  Output: InsectSprays %>% group_by(spray) %>% summarise(mean(count))
+
+#45    
+- Class: text
+  Output: You can also directly name the new, aggregate variable. Like this
+  
+#46    
+- Class: text
+  Output: InsectSprays %>% group_by(spray) %>% summarise(avg_count = mean(count))
+  
+#47
+- Class: cmd_question
+  Output: How about you find the maximum count per spray now? 
+    Just call it max_count.
+  AnswerTests: omnitest("InsectSprays %>% group_by(spray) %>% summarise(max_count = max(count))")
+  Hint: Just type InsectSprays %>% group_by(spray) %>% summarise(max_count = max(count)).  
+   
+#48
+- Class: cmd_question
+  Output: To wrap up, let's do some summarizing on a different dataset.
+    Remember mtcars? Look at the first rows again. 
+  AnswerTests: omnitest("head(mtcars)")
+  Hint: Just type head(mtcars).  
+  
+#49
+- Class: exact_question
+  Output: What's the mean mpg for automatic transmission (am = 0)? Round the value to 1 digit after the comma.
+    Please type play() now, find out the answer, and then come back, using nxt().
+    In case you've already done that, now type your answer at the prompt.
+  AnswerTests: omnitest('17.1')
+  Hint: Just type play() first and then, you could do something like mtcars %>% group_by(am) %>% summarise(mean(mpg)) %>% round(1).
+  
+
+#50
+- Class: exact_question
+  Output: Look at the maximum mpg by number of cylinders. Which number of cylinders has the maximum mpg?
+    Please type play() now, find out the answer, and then come back, using nxt().
+    In case you've already done that, now type your answer at the prompt.
+  AnswerTests: omnitest('4')
+  Hint: Just type play() first and then, you could do something like mtcars %>% group_by(cyl) %>% summarise(max(mpg)).
+  
+
+#54    
+- Class: text
+  Output: OK, that's it for querying data now! See you in the plotting lesson.
+  

@@ -1,0 +1,241 @@
+- Class: meta
+  Course: dive_into_R_workshop
+  Lesson: plotting
+  Author: Sigrid Keydana
+  Type: Standard
+  Organization: Trivadis
+  Version: 2.4.3
+
+#1
+- Class: text
+  Output: In this lesson, we'll look at plotting with R.
+
+#2
+- Class: text
+  Output: There are several plotting systems in R, the most important of which, as of today, is ggplot2.
+    However, there is an amazing lot of things you can do with base R.
+    We'll start with base R and then quickly move on to ggplot2.
+
+#3
+- Class: text
+  Output: Many objects in R have their own plot methods, so you can simply call plot on them and get an adequate output.
+    We'll look at some examples soon. First, however, we'll plot some simple data ourselves.
+    
+#4
+- Class: cmd_question
+  Output: Please now create a vector called xvec consisting of the numbers from 1 to 100.
+  AnswerTests: omnitest('xvec <- 1:100')
+  Hint: Just type xvec <- 1:100.
+
+#5
+- Class: cmd_question
+  Output: Now, create a vector yvec as the sum of xvec and a random error. Type yvec <- xvec + rnorm(100, sd = 5)
+  AnswerTests: omnitest('yvec <- xvec + rnorm(100, sd = 5)')
+  Hint: Just type yvec <- xvec + rnorm(100, sd = 5).
+  
+#6
+- Class: cmd_question
+  Output: Now, all you have to do to create a scatterplot of yvec versus xvec is call plot on them!
+    That is, the minimal syntax for default plot is plot(<x>, <y>), or, with parameters, plot(x = <x>, y = <y>).
+    Please do this now.
+  AnswerTests: any_of_exprs('plot(x = xvec, y = yvec)', 'plot(xvec, yvec)')
+  Hint: Just type plot(x = xvec, y = yvec).
+  
+#7
+- Class: cmd_question
+  Output: If you want a different kind of plot, you use the type parameter.
+    Now instead of a scatterplot please create a lines plot (the value for type is 'l')
+  AnswerTests: omnitest("plot(x = xvec, y = yvec, type='l')")
+  Hint: Just type plot(x = xvec, y = yvec, type='l')
+
+#8
+- Class: cmd_question
+  Output: You can easily name the x and y axes, and give the plot a title, using the xlab, ylab, and main parameters, respectively.
+    Do this now, please, naming the x-axis "timeline", the y-axis "returns", and the plot itself "Returns over time".
+  AnswerTests: omnitest("plot(x = xvec, y = yvec, type='l', xlab = 'timeline', ylab = 'returns', main = 'Returns over time')")
+  Hint: Just type > plot(x = xvec, y = yvec, type='l', xlab = 'timeline', ylab = 'returns', main = 'Returns over time')
+
+#9
+- Class: cmd_question
+  Output: Now we've seen scatterplots and line plots.
+    To plot a histogram, you use the hist() function instead of plot.
+    hist creates the histogram and plots it right away.
+    Try this with the cyl column of the mtcars dataset now.
+  AnswerTests: omnitest('hist(mtcars$cyl)')
+  Hint: Just type hist(mtcars$cyl).
+  
+#10
+- Class: cmd_question
+  Output: Another plot type you might want to use is a boxplot. Boxplots show the distribution of a variable.
+    Try this with the wt column of the mtcars dataset now.
+  AnswerTests: omnitest('boxplot(mtcars$wt)')
+  Hint: Just type boxplot(mtcars$wt).
+  
+  
+#11
+- Class: cmd_question
+  Output: Before we move on to ggplot2, here are examples of objects that have implemented their own plot method.
+    For example, data.frame. Call plot on the mtcars dataset now to see what happens.
+  AnswerTests: omnitest('plot(mtcars)')
+  Hint: Just type plot(mtcars).  
+ 
+  
+#12
+- Class: cmd_question
+  Output: Functions have a plot method, too. See what happens if you enter plot(sin,-3,3).
+  AnswerTests: omnitest('plot(sin,-3,3)')
+  Hint: Just type plot(sin,-3,3). 
+ 
+#13
+- Class: text
+  Output: R's basic plotting system is great, but to create production quality graphics and/or more complex plots you would use ggplot2.
+ 
+#14
+- Class: text
+  Output: Behind ggplot2 there's a whole "grammar of graphics" and we can only touch the basics here.
+
+#15
+- Class: text
+  Output: ggplot works by first creating a coordinate system (an empty graph) and then adding layers to it.
+    In the first step, you call the ggplot function with the dataset you're working on.
+
+#16
+- Class: text
+  Output: We've already loaded the ggplot2 library and the diamonds dataset, which comes with it.
+    Let's start by creating an empty graph and storing it in a variable, like this
+ 
+#17
+- Class: cmd_question
+  Output: g <- ggplot(data = diamonds). Do this now.
+  AnswerTests: omnitest('g <- ggplot(data = diamonds)')
+  Hint: Just type g <- ggplot(data = diamonds).    
+  
+#18
+- Class: cmd_question
+  Output: Now, display g to see what you got.
+  AnswerTests: omnitest('g')
+  Hint: Just type g.  
+  
+#19
+- Class: text
+  Output: Now we can add layers to the graph. Adding layers means adding "geoms", which are different types of visuals like scatterplots, histograms, etc.
+  
+#20
+- Class: text
+  Output: The geom_<> functions need to know what aspect of the visual ("aesthetics", in ggplot language) to map to which part of the data.
+    For example, what should the x- and y-axes represent?
+  
+#21
+- Class: text
+  Output: For that, every geom_<> function takes a "mapping" argument, and in that argument, you map aesthetics to variables.
+    
+#22
+- Class: text
+  Output: Adding a layer to our empty plot g, we thus create a scatterplot of price by carat like this 
+    
+#23
+- Class: text
+  Output: g + geom_point(mapping = aes(x = carat, y = price))
+  
+#24
+- Class: cmd_question
+  Output: Type the above command now, and you'll get the plot.
+  AnswerTests: omnitest('g + geom_point(mapping = aes(x = carat, y = price))')
+  Hint: Just type g + geom_point(mapping = aes(x = carat, y = price)). 
+  
+#25
+- Class: text
+  Output: We can map further variables to other aesthetics.
+    For example, we can use color to distinguish between different cuts. Type
+    
+#26
+- Class: text
+  Output: g + geom_point(mapping = aes(x = carat, y = price, color = cut))
+  
+#27
+- Class: cmd_question
+  Output: to try this out.  
+  AnswerTests: omnitest('g + geom_point(mapping = aes(x = carat, y = price, color = cut))')
+  Hint: Just type g + geom_point(mapping = aes(x = carat, y = price, color = cut)).   
+  
+#28
+- Class: text
+  Output: Something else you might want to do is display several plots, one for each setting of a (categorical) variable.
+    You do this using facet_wrap(~ <variable name>), where ~ is R's formula syntax. 
+    For example, to create a separate plot for every value of cut, type
+    
+#29
+- Class: text
+  Output: g + geom_point(mapping = aes(x = carat, y = price)) + facet_wrap(~ cut)
+  
+#30
+- Class: cmd_question
+  Output: Just type this now to see the result.
+  AnswerTests: omnitest('g + geom_point(mapping = aes(x = carat, y = price)) + facet_wrap(~ cut)')
+  Hint: Just type g + geom_point(mapping = aes(x = carat, y = price)) + facet_wrap(~ cut).    
+  
+
+#31
+- Class: text
+  Output: There is an alternative syntax that is useful if you want to add several geoms.
+    You can specify mappings already in the ggplot() call. The mappings you specify there are used for all geoms that follow.
+    So an alternative way to draw the above plot would be
+
+#32
+- Class: text
+  Output: ggplot(data = diamonds, mapping = aes(x = carat, y = price)) + geom_point()
+
+
+#33
+- Class: cmd_question
+  Output: Just type this now to see the result is the same.
+  AnswerTests: omnitest('ggplot(data = diamonds, mapping = aes(x = carat, y = price)) + geom_point()')
+  Hint: Just type ggplot(data = diamonds, mapping = aes(x = carat, y = price)) + geom_point().    
+  
+
+#34
+- Class: text
+  Output: Now imagine we want to add a smoothing line to our scatterplot of price versus carat.
+    We can do this by adding another geom, geom_smooth, like this
+    
+
+#35
+- Class: text
+  Output: ggplot(data = diamonds, mapping = aes(x = carat, y = price)) + geom_point() + geom_smooth()
+  
+#36
+- Class: cmd_question
+  Output: Type this now to see what happens.
+  AnswerTests: omnitest('ggplot(data = diamonds, mapping = aes(x = carat, y = price)) + geom_point() + geom_smooth()')
+  Hint: Just type ggplot(data = diamonds, mapping = aes(x = carat, y = price)) + geom_point() + geom_smooth().    
+    
+
+#46
+- Class: text
+  Output: Now it's your turn! You're going to do some plots of the mtcars dataset.
+
+  
+#47
+- Class: cmd_question
+  Output: First, look at the first rows of mtcars again to see what variables it contains.
+  AnswerTests: omnitest('head(mtcars)')
+  Hint: Just type head(mtcars).   
+
+#48
+- Class: cmd_question
+  Output: Now create a scatterplot of mpg by wt.
+    For reference, the syntax used above was ggplot(data = diamonds, mapping = aes(x = carat, y = price)) + geom_point().
+  AnswerTests: omnitest('ggplot(data = mtcars, mapping = aes(x = wt, y = mpg)) + geom_point()')
+  Hint: Just type ggplot(data = mtcars, mapping = aes(x = wt, y = mpg)) + geom_point().  
+  
+#49
+- Class: cmd_question
+  Output: Now, please do the same, but add a smoothing line.
+  AnswerTests: omnitest('ggplot(data = mtcars, mapping = aes(x = wt, y = mpg)) + geom_point() + geom_smooth()')
+  Hint: Just type ggplot(data = mtcars, mapping = aes(x = wt, y = mpg)) + geom_point() + geom_smooth().  
+
+#55  
+- Class: text
+  Output: OK, that's it for plotting!
+    There are many more things you can do with ggplot2, but it takes a bit of practice to get accustomed to the syntax, so don't worry if you have to look it up often in the beginning.
+    

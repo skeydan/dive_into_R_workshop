@@ -1,0 +1,237 @@
+- Class: meta
+  Course: dive_into_R_workshop
+  Lesson: vectorization_functions_loops
+  Author: Sigrid Keydana
+  Type: Standard
+  Organization: Trivadis
+  Version: 2.4.3
+
+
+#1
+- Class: text
+  Output: In this lesson, we'll look at an amazing feature of R - vectorization - and at the basics of loops and functions.
+    Let's start with vectorization.
+    
+#2
+- Class: text
+  Output: Remember how there are really no scalars in R?
+    This also means that operations usually thought of as being performed on scalars are performed on vector objects in R.
+    These operations are called vectorized.
+    
+#3
+- Class: cmd_question
+  Output: For example, please go ahead and define a vector v as the sequence of integers from -10 to 10.
+  AnswerTests: omnitest('v <- -10:10')
+  Hint: Just type v <- -10:10.
+  
+#4
+- Class: cmd_question
+  Output: Now, typing <vector> + <number> will add <number> to every element of <vector>.
+    Add 7 to every element of v now.
+  AnswerTests: omnitest(correctVal = '-10:10 + 7')
+  Hint: Just type v + 7.
+
+#5
+- Class: cmd_question
+  Output: Nice right? Now create a vector v2 containing the numbers from 10 to -10.
+  AnswerTests: omnitest('v2 <- 10:-10')
+  Hint: Just type v2 <- 10:-10.
+
+#6
+- Class: cmd_question
+  Output: Because of vectorization, you can now add up the vectors, which is equivalent to adding up their elements.
+    Please add v and v2 now.
+  AnswerTests: omnitest(correctVal = 'v + v2')
+  Hint: Just type v + v2.  
+
+
+#7
+- Class: text
+  Output: Vectorization has many uses. In many cases, it helps avoid expensive looping constructs.
+    This may lead to large performance gains.
+
+#12
+- Class: text
+  Output: With vectorization used simultaneously on several vectors, pay attention to the vectors' length.
+    Unless you really know what you're doing and have a special purpose, all vectors involved should normally be of the same length.
+    
+#1
+- Class: text
+  Output: Now let's have a quick look at functions!
+
+#2
+- Class: text
+  Output: Functions automatically return the value of the last line of code.
+    This is how you would define a function that adds 1 to its input 
+
+#3
+- Class: text
+  Output: f <- function(x) x + 1
+  
+#4
+- Class: text
+  Output: If you have several statements in the function body, you need curly braces as delimiters, like this  
+    
+#5
+- Class: text
+  Output: f <- function(x) {a = x + 1; b = a * 2; b}
+  
+#6
+- Class: text
+  Output: Functions in R often have default arguments. These are specified in the parameter list as follows
+
+#7
+- Class: text
+  Output: f <- function(x  =255) {x + 1}  
+  
+#8
+- Class: text
+  Output: Functions do not necessarily have to be named. You can also create inline functions (closures).
+    We'll see an example at the end of this chapter.
+
+#9
+- Class: text
+  Output: Now let's quickly look at control structures in R. R has the usual if-else, as in
+
+#10
+- Class: text
+  Output: if (1 == 2) {print("strange")} else {print("expected")}
+  
+#11
+- Class: text
+  Output: What's very useful in data wrangling is the ifelse function.
+    ifelse is vectorized, which means you can use it on vectors, like columns of a data.frame.
+    
+#13
+- Class: cmd_question
+  Output: As an example, this time we'll choose the very well-known iris dataset.
+    Please take a look at the first rows in the dataset.
+  AnswerTests: omnitest('head(iris)')
+  Hint: Just type head(iris).
+  
+#14
+- Class: cmd_question
+  Output: Use ifelse to check which rows have a Sepal.Length greater than 6.9.
+    The syntax is ifelse(<condition>, <true case>, <false case>). Use TRUE for <true case> and FALSE for <false case>.
+  AnswerTests: omnitest('ifelse(iris$Sepal.Length>6.9,TRUE, FALSE)')
+  Hint: Just type ifelse(iris$Sepal.Length>6.9,TRUE, FALSE).
+  
+#15
+- Class: cmd_question
+  Output: As you see, you get back a vector of TRUEs and FALSEs.
+    You can use this to filter the rows according to whether they fulfill the condition.
+    Now, do the same thing as before but store the result in a variable longer_than.
+  AnswerTests: omnitest('longer_than <- ifelse(iris$Sepal.Length>6.9,TRUE, FALSE)')
+  Hint: Just type longer_than <- ifelse(iris$Sepal.Length>6.9,TRUE, FALSE).
+  
+#16
+- Class: cmd_question
+  Output: Now you can use subsetting to get all irises which have Sepal.Length > 6.9.
+    How this works is you use longer_than as a vector of indices to index into the iris dataset.
+    Rows that are TRUE will be returned, rows that are FALSE will be omitted.
+  AnswerTests: omnitest('iris[longer_than,]')
+  Hint: Just type iris[longer_than,].  
+  
+#17
+- Class: text
+  Output: Finally, let's address the last subject of this chapter - looping.
+  
+#18
+- Class: text
+  Output: R has the usual for loop, but it is not used as much as you might think.
+    For one, whenever possible we normally want to use vectorization instead.
+    And second, there is the apply family of functions that - well - applies a function to all elements in a container.
+    
+#19
+- Class: text
+  Output: This is how a basic for loop looks.
+     
+#20
+- Class: text
+  Output: for (i in 1:10) {print(i)}
+  
+#21
+- Class: cmd_question
+  Output: Now use a for loop to print Petal.Length for the first 3 rows of the iris dataset.
+  AnswerTests: any_of_exprs('for (i in iris[1:3,"Petal.Length"]) {print(i)}', 'for(i in iris[1:3,3]) print(i)','for (i in 1:3) print(iris$Petal.Length[i])', 'for (i in iris[1:3,"Petal.Length"]) print(i)','for (i in iris[1:3,3]) {print(i)}')
+  Hint: Just type for (i in iris[1:3,'Petal.Length']) {print(i)}.  
+  
+#22
+- Class: cmd_question
+  Output: Compare this to how you would use vectorization to apply a transformation to that same subset of data.
+    Again for the first 3 rows, add 1 to Petal.Length now (using vectorization).
+  AnswerTests: any_of_exprs('iris[1:3,"Petal.Length"] + 1','iris[1:3, 3] + 1')
+  Hint: Just type iris[1:3,'Petal.Length'] + 1.   
+  
+#23
+- Class: text
+  Output: Then, there's the apply family - apply, lapply, sapply, mapply...
+  
+#24
+- Class: text
+  Output: We'll just quickly look at apply and lapply/sapply here.
+    If you later find yourself using apply & co. a lot, definitely check out purrr - a package by tidyverse creator Hadley Wickham that provides typesafe functional programming with R. 
+    You use lapply to apply a function to every element of a vector, or list, and it returns the result as a list.
+    For example, here we apply an inline function to a vector of characters
+    
+#25
+- Class: text
+  Output: lapply(letters[1:4], toupper)
+    
+#26
+- Class: cmd_question
+  Output: Just type lapply(letters[1:4], toupper) now to see how the result looks.
+  AnswerTests: omnitest('lapply(letters[1:4], toupper)')
+  Hint: Just type lapply(letters[1:4], toupper).   
+    
+#27
+- Class: cmd_question
+  Output: As you see, even though the input was a vector, the result is a list. Sapply, on the other hand, simplifies the result.
+    Type sapply(letters[1:4], toupper) now to see how the return value differs.
+  AnswerTests: omnitest('sapply(letters[1:4], toupper)')
+  Hint: Just type sapply(letters[1:4], toupper).   
+  
+#28
+- Class: text
+  Output: Finally, apply is used on 2- or n-dimensional objects, e.g., matrices.
+    You apply a function to either the rows or the columns of a matrix. For example,
+    
+#29
+- Class: text
+  Output: apply(m, 1, sum)
+  
+#30
+- Class: text
+  Output: computes the sum of the rows of matrix m, whereas
+  
+#31
+- Class: text
+  Output: apply(m, 2, mean)
+
+#32
+- Class: text
+  Output: computes the column means.
+    
+#33
+- Class: cmd_question
+  Output: You can also use this on a data.frame, or more precisely, its numeric columns. 
+    Please create a matrix iris_matrix of the iris dataset, using the first 4 columns only.
+    Use the as.matrix function for data type conversion, as in my_matrix <- as.matrix(my_frame).
+  AnswerTests: any_of_exprs('iris_matrix <- as.matrix(iris[ ,1:4])','iris_matrix <- as.matrix(iris[1:4])')
+  Hint: Just type iris_matrix <- as.matrix(iris[ ,1:4]).   
+  
+  
+#34
+- Class: cmd_question
+  Output: Now use apply to compute the column means of iris_matrix.
+  AnswerTests: omnitest('apply(iris_matrix, 2, mean)')
+  Hint: Just type apply(iris_matrix, 2, mean).     
+  
+#35
+- Class: text
+  Output: OK, that's it for now! It's time to jump into the tidyverse!
+  
+  
+ 
+  
+  
