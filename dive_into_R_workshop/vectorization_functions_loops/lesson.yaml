@@ -160,7 +160,7 @@
 - Class: cmd_question
   Output: Compare this to how you would use vectorization to apply a transformation to that same subset of data.
     Again for the first 3 rows, add 1 to Petal.Length now (using vectorization).
-  AnswerTests: any_of_exprs('iris[1:3,"Petal.Length"] + 1','iris[1:3, 3] + 1')
+  AnswerTests: any_of_exprs('iris[1:3,"Petal.Length"] + 1','iris[1:3, 3] + 1','iris$Petal.Length[1:3] + 1')
   Hint: Just type iris[1:3,'Petal.Length'] + 1.   
   
 #23
